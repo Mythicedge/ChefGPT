@@ -20,7 +20,7 @@ class HomePageRepo extends HomePageRepository {
         body: jsonEncode(
           {
             "model": "gpt-3.5-turbo-instruct",
-            "prompt": "Create a recipe from a list of ingredients: \n$prompt",
+            "prompt": "Create a recipe from a list of ingredients: \n$prompt . Show allergy warnings at the end",
             "max_tokens": 250,
             "temperature": 0,
             "top_p": 1,

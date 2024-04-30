@@ -1,25 +1,18 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import '../Data/homepage_repo.dart';
+import 'SavedPage.dart';
+import 'ProfilePage.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+
+class RecipePage extends StatefulWidget {
+  const RecipePage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<RecipePage> createState() => _HomePageState();
 }
 
-
-
-
-
-
-
-
-
-const double kSpacing = 20.0; // You can adjust this value as needed
-
-
+const double kSpacing = 20.0;
 
 class HeightSpacer extends StatelessWidget {
   final double height;
@@ -58,25 +51,45 @@ class PrimaryBtn extends StatelessWidget {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<RecipePage> {
   late TextEditingController controller;
   late FocusNode focusNode;
   final List<String> inputTags = [];
   String response = '';
 
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+  setState(() {
+    _selectedIndex = index;
+  });
+
+  switch (index) {
+    case 0:
+      // Navigate to RecipePage
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RecipePage()),
+      );
+      break;
+    case 1:
+      // Navigate to SavedPage
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SavedPage()),
+      );
+      break;
+    case 2:
+      // Navigate to ProfilePage
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ProfilePage()),
+      );
+      break;
+  }
+}
+
+   
   @override
   void initState() {
     controller = TextEditingController();
@@ -88,7 +101,7 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     controller.dispose();
     focusNode.dispose();
-    super.dispose;
+    super.dispose();
   }
 
   @override 
@@ -119,11 +132,11 @@ class _HomePageState extends State<HomePage> {
                         controller: controller,
                         onFieldSubmitted: (value) {
                           controller.clear();
-                          setState((){
+                          setState(() {
                             inputTags.add(value);
                             focusNode.requestFocus();
                           });
-                         },
+                        },
                         decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
@@ -131,14 +144,17 @@ class _HomePageState extends State<HomePage> {
                             ),
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(5.5),
-                              bottomLeft: Radius.circular(5.5))),
+                              bottomLeft: Radius.circular(5.5),
+                            ),
+                          ),
                           enabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide(),
                           ),
-                          labelText: "Enter the ingredients your have...",
+                          labelText: "Enter the ingredients you have...",
                           labelStyle: TextStyle(
                             color: Theme.of(context).colorScheme.primary,
-                          )),
+                          ),
+                        ),
                       ),
                     ),
                     Container(
@@ -151,14 +167,14 @@ class _HomePageState extends State<HomePage> {
                             setState(() {
                               inputTags.add(controller.text);
                               focusNode.requestFocus();
-                             });
+                            });
                             print(inputTags);
-                           },
+                          },
                           icon: const Icon(
                             Icons.add,
                             color: Colors.white,
                             size: 30,
-                          )
+                          ),
                         ),
                       ),
                     )
@@ -169,66 +185,86 @@ class _HomePageState extends State<HomePage> {
                   child: Wrap(
                     children: [
                       for (int i = 0; i < inputTags.length; i++)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                        child: Chip(
-                          backgroundColor: Color(
-                            (math.Random().nextDouble() * 0xFFFFFF)
-                                  .toInt())
-                              .withOpacity(0.1),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          child: Chip(
+                            backgroundColor: Color(
+                              (math.Random().nextDouble() * 0xFFFFFF).toInt(),
+                            ).withOpacity(0.1),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.5)),
+                              borderRadius: BorderRadius.circular(5.5),
+                            ),
                             onDeleted: () {
                               setState(() {
                                 inputTags.remove(inputTags[i]);
                                 print(inputTags);
                               });
                             },
-                              label: Text(inputTags[i]),
-                              deleteIcon: const Icon(
-                                Icons.close,
-                                size:20,
-                              ),
+                            label: Text(inputTags[i]),
+                            deleteIcon: const Icon(
+                              Icons.close,
+                              size: 20,
+                            ),
                           ),
                         ),
-                      ],
+                    ],
                   ),
                 ),
                 Expanded(
-                          child: SizedBox(
-                            child: Center(
-                              child: SingleChildScrollView(
-                                child: Text(
-                                  response,
-                                  style: const TextStyle(fontSize: 20),
-                                )),
-                            ),
-                          )),
-                          HeightSpacer(height: kSpacing/2),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: PrimaryBtn(
-                              btnChild: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(Icons.auto_awesome),
-                                  WidthSpacer(width: kSpacing / 2),
-                                  const Text('Create Recipe'),
-                                ],
-                              ),
-                              btnFun: () async {
-                                setState(() => response = "Generating...");
-                                var temp = 
-                                    await HomePageRepo().askAI(inputTags.toString());
-                                setState(() => response = temp);
-                              }
-                            ),
-                          ),
-                ],
+                  child: SizedBox(
+                    child: Center(
+                      child: SingleChildScrollView(
+                        child: Text(
+                          response,
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
+                HeightSpacer(height: kSpacing / 2),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: PrimaryBtn(
+                    btnChild: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.auto_awesome),
+                        WidthSpacer(width: kSpacing / 2),
+                        const Text('Create Recipe'),
+                      ],
+                    ),
+                    btnFun: () async {
+                      setState(() => response = "Generating...");
+                      var temp = await HomePageRepo().askAI(inputTags.toString());
+                      setState(() => response = temp);
+                    },
+                  ),
                 ),
+              ],
             ),
           ),
-        );
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu_book),
+            label: 'Recipe',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bookmark),
+            label: 'Saved',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
+      ),
+    );
   }
 }
