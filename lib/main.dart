@@ -18,8 +18,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Recipe App',
-      //theme: ThemeClass.lightTheme,
-      //darkTheme: ThemeClass.darkTheme,
       themeMode: ThemeMode.system,
       initialRoute: '/',
       onGenerateRoute: RouteGenerator().generateRoute,

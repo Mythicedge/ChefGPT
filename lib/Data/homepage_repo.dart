@@ -33,4 +33,37 @@ class HomePageRepo extends HomePageRepository {
       return e.toString();
     }
   }
+  
+  Future<dynamic> generateImage(String description) async {
+  try {
+    final response = await http.post(
+      Uri.parse('https://api.openai.com/v1/images/generations'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${dotenv.env['token']}'
+      },
+      body: jsonEncode({
+        "model": "dall-e-2",
+        "prompt": description,
+        "n": 1,
+        "size": "1024x1024"
+      }),
+    );
+
+    print("Full API Response: ${response.body}"); // Debugging the full response
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
+      var imageUrl = jsonData['data'][0]['url'];
+      return imageUrl;
+    } else {
+      return "API call failed with status: ${response.statusCode}";
+    }
+  } catch (e) {
+    print("Error in generating image: $e");
+    return e.toString();
+  }
+}
+
+
+
 }
