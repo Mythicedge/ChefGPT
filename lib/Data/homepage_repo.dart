@@ -21,7 +21,7 @@ class HomePageRepo extends HomePageRepository {
           {
             "model": "gpt-3.5-turbo-instruct",
             "prompt": "Create a recipe from a list of ingredients: \n$prompt . Show allergy warnings at the end",
-            "max_tokens": 250,
+            "max_tokens": 1000,
             "temperature": 0,
             "top_p": 1,
           },
@@ -34,7 +34,14 @@ class HomePageRepo extends HomePageRepository {
     }
   }
   
-  Future<dynamic> generateImage(String description) async {
+  Future<dynamic> generateImage(String fullDescription) async {
+  // Extract the title and the ingredients section from the full description
+  String description = fullDescription;
+  int endIndex = fullDescription.indexOf("\n\nAllergy Warnings:");
+  if (endIndex > 0) {
+    description = fullDescription.substring(0, endIndex); // Extract up to "Allergy Warnings"
+  }
+
   try {
     final response = await http.post(
       Uri.parse('https://api.openai.com/v1/images/generations'),
@@ -44,7 +51,7 @@ class HomePageRepo extends HomePageRepository {
       },
       body: jsonEncode({
         "model": "dall-e-2",
-        "prompt": description,
+        "prompt": description,  // Use the newly formatted description here
         "n": 1,
         "size": "1024x1024"
       }),
@@ -63,6 +70,8 @@ class HomePageRepo extends HomePageRepository {
     return e.toString();
   }
 }
+
+
 
 
 
