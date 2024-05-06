@@ -38,7 +38,6 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       // Check if the widget is still mounted before updating the UI
-      
     } on FirebaseAuthException catch (e) {
       // Show error message based on error code
       _showErrorMessage(e.code);
@@ -51,42 +50,42 @@ class _LoginPageState extends State<LoginPage> {
 
   // Function to show error message in a dialog
   void _showErrorMessage(String message) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        backgroundColor: Colors.transparent, // Transparent background
-        content: Container(
-          decoration: BoxDecoration(
-            color: Color.fromARGB(255, 173, 20, 9),
-            borderRadius: BorderRadius.circular(10), // Rounded border radius
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: Text(
-                  message,
-                  style: TextStyle(color: Colors.white),
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent, // Transparent background
+          content: Container(
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 173, 20, 9),
+              borderRadius: BorderRadius.circular(10), // Rounded border radius
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Text(
+                    message,
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context); // Dismiss the dialog
-                },
-                child: Text(
-                  'OK',
-                  style: TextStyle(color: Colors.white),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Dismiss the dialog
+                  },
+                  child: Text(
+                    'OK',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Logo
-                SquareTile(imagePath: 'lib/images/Screenshot 2024-04-23 at 8.09.02 AM.png'),
+                SquareTile(imagePath: 'lib/images/screenshot qqw.png'),
                 // Welcome message
                 Text(
                   'Welcome to Cooking App!',
@@ -144,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                 _loading
                     ? CircularProgressIndicator() // Show loading indicator if loading
                     : MyButton(
-                      text: 'Sign In',
+                        text: 'Sign In',
                         onTap: signUserIn,
                       ),
                 const SizedBox(height: 50),

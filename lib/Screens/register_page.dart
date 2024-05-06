@@ -1,4 +1,4 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:recipetestapp/components/my_buttons.dart';
 import 'package:recipetestapp/components/my_textfield.dart';
@@ -55,42 +55,42 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // Function to show error message in a dialog
   void _showErrorMessage(String message) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        backgroundColor: Colors.transparent, // Transparent background
-        content: Container(
-          decoration: BoxDecoration(
-            color: Color.fromARGB(255, 173, 20, 9),
-            borderRadius: BorderRadius.circular(10), // Rounded border radius
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: Text(
-                  message,
-                  style: TextStyle(color: Colors.white),
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent, // Transparent background
+          content: Container(
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 173, 20, 9),
+              borderRadius: BorderRadius.circular(10), // Rounded border radius
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Text(
+                    message,
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context); // Dismiss the dialog
-                },
-                child: Text(
-                  'OK',
-                  style: TextStyle(color: Colors.white),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Dismiss the dialog
+                  },
+                  child: Text(
+                    'OK',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,8 +102,8 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-               // Logo
-                SquareTile(imagePath: 'lib/images/Screenshot 2024-04-23 at 8.09.02 AM.png'),
+                // Logo
+                SquareTile(imagePath: 'lib/images/screenshot qqw.png'),
                 // Welcome message
                 Text(
                   'Create an Account',
@@ -146,7 +146,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             MaterialPageRoute(
                               builder: (context) => LoginPage(
                                 onTap: () {
-                                  Navigator.pop(context); // Navigate back to register page if needed
+                                  Navigator.pop(
+                                      context); // Navigate back to register page if needed
                                 },
                               ),
                             ),
@@ -178,23 +179,24 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     const SizedBox(height: 4),
                     GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginPage(
-                                onTap: () {
-                                  Navigator.pop(context); // Navigate back to register page if needed
-                                },
-                              ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginPage(
+                              onTap: () {
+                                Navigator.pop(
+                                    context); // Navigate back to register page if needed
+                              },
                             ),
-                          );
-                        },
-                        child: Text(
-                          ' Login Now',
-                          style: TextStyle(color: Colors.blue[600]),
-                        ),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        ' Login Now',
+                        style: TextStyle(color: Colors.blue[600]),
                       ),
+                    ),
                   ],
                 ),
               ],
