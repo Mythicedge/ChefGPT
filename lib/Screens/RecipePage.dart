@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import '../Data/homepage_repo.dart';
 import 'SavedPage.dart';
 import 'ProfilePage.dart';
-
+import 'ExplorePage.dart';
 
 class RecipePage extends StatefulWidget {
   const RecipePage({Key? key}) : super(key: key);
@@ -78,11 +78,16 @@ class _HomePageState extends State<RecipePage> {
           MaterialPageRoute(builder: (context) => SavedPage()),
         );
         break;
-      case 2:
+      case 3:
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => ProfilePage()),
         );
+        break;
+      case 2:
+        Navigator.pushReplacement(context,
+         MaterialPageRoute(builder: (context) => ExplorePage())
+         );
         break;
     }
   }
@@ -264,9 +269,10 @@ class _HomePageState extends State<RecipePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
+            icon: Icon(Icons.menu_book, size:24),
             label: 'Recipe',
           ),
           BottomNavigationBarItem(
@@ -274,9 +280,14 @@ class _HomePageState extends State<RecipePage> {
             label: 'Saved',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.explore),
+             label: 'Explore'
+             ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
+          
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],

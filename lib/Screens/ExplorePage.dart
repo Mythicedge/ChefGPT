@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'RecipePage.dart';
+import 'SavedPage.dart';
 import 'ProfilePage.dart';
-import 'ExplorePage.dart';
 
-class SavedPage extends StatefulWidget {
-  const SavedPage({Key? key}) : super(key: key);
+class ExplorePage extends StatefulWidget {
+  const ExplorePage({Key? key}) : super(key: key);
 
   @override
-  State<SavedPage> createState() => _SavedPageState();
+  State<ExplorePage> createState() => _ExplorePageState();
 }
 
-const double kSpacing = 20.0; // You can adjust this value as needed
+const double kSpacing = 20.0; 
 
 class HeightSpacer extends StatelessWidget {
   final double height;
@@ -49,46 +49,46 @@ class PrimaryBtn extends StatelessWidget {
   }
 }
 
-class _SavedPageState extends State<SavedPage> {
+class _ExplorePageState extends State<ExplorePage> {
   late TextEditingController controller;
   late FocusNode focusNode;
   final List<String> inputTags = [];
   String response = '';
 
-  int _selectedIndex = 1; // Set the selected index for SavedPage to 1
+  int _selectedIndex = 2; // Set the selected index for ExplorePage to 3
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-    // You can use a Navigator to navigate to the appropriate page based on the index
-    if (index == 0) {
-      // Navigate to RecipePage
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => RecipePage()),
-      );
-    } else if (index == 1) {
-      // Navigate to SavedPage (only in HomePage)
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => SavedPage()),
-      );
-    } else if (index == 3) {
-      // Navigate to ProfilePage
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => ProfilePage()),
-      );
-    }
-    else if (index == 2) {
-      // Navigate to ExplorePage
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => ExplorePage()),
-      );
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => RecipePage()),
+        );
+        break;
+      case 1:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => SavedPage()),
+        );
+        break;
+      case 3:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ExplorePage()),
+        );
+        break;
     }
   }
+
   @override
   void initState() {
     controller = TextEditingController();
@@ -103,19 +103,14 @@ class _SavedPageState extends State<SavedPage> {
     super.dispose();
   }
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              children: [
-                // Put in SavedPage code here
-              ],
-            ),
+          child: Center(
+            child: Text("Explore the world of recipes!", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           ),
         ),
       ),
@@ -132,8 +127,8 @@ class _SavedPageState extends State<SavedPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.explore),
-             label: 'Explore'
-             ),
+            label: 'Explore'
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',

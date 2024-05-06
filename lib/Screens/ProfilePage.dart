@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'RecipePage.dart';
 import 'SavedPage.dart';
+import 'ExplorePage.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -54,7 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final List<String> inputTags = [];
   String response = '';
 
-  int _selectedIndex = 2; // Set the selected index for ProfilePage to 2
+  int _selectedIndex = 3; // Set the selected index for ProfilePage to 2
 
   void _onItemTapped(int index) {
     setState(() {
@@ -75,11 +76,18 @@ class _ProfilePageState extends State<ProfilePage> {
           MaterialPageRoute(builder: (context) => SavedPage()),
         );
         break;
-      case 2:
+      case 3:
         // Navigate to ProfilePage
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
+        break;
+      case 2:
+        // Navigate to ExplorePage
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ExplorePage()),
         );
         break;
     }
@@ -116,6 +124,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book),
@@ -126,9 +135,14 @@ class _ProfilePageState extends State<ProfilePage> {
             label: 'Saved',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.explore),
+             label: 'Explore'
+             ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
+          
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],
