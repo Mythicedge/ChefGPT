@@ -115,7 +115,7 @@ class _HomePageState extends State<RecipePage> {
           child: Column(
             children: [
               const Text(
-                'Find the best recipe for cooking!',
+                'Generate a recipe!',
                 maxLines: 3,
                 style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
               ),
@@ -129,12 +129,15 @@ class _HomePageState extends State<RecipePage> {
                       focusNode: focusNode,
                       controller: controller,
                       onFieldSubmitted: (value) {
-                        controller.clear();
-                        setState(() {
-                          inputTags.add(value);
-                          focusNode.requestFocus();
-                        });
+                        if (value.isNotEmpty) {
+                          setState(() {
+                            inputTags.add(value);
+                            controller.clear();
+                            focusNode.requestFocus();
+                          });
+                        }
                       },
+
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -161,12 +164,13 @@ class _HomePageState extends State<RecipePage> {
                       padding: const EdgeInsets.all(9),
                       child: IconButton(
                         onPressed: () {
-                          controller.clear();
                           setState(() {
-                            inputTags.add(controller.text);
+                            if (controller.text.isNotEmpty) {
+                              inputTags.add(controller.text);
+                            }
+                            controller.clear();
                             focusNode.requestFocus();
                           });
-                          print(inputTags);
                         },
                         icon: const Icon(
                           Icons.add,
