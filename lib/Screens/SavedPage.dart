@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import '../Data/recipe_model.dart';
+import '../Data/recipemodel_provider.dart';
+import 'package:provider/provider.dart'; 
+
 
 class SavedPage extends StatefulWidget {
-  final List<Recipe>? savedRecipes;
-
-  const SavedPage({Key? key, this.savedRecipes}) : super(key: key);
+ 
+  //const SavedPage({Key? key, this.savedRecipes}) : super(key: key);
+  const SavedPage({Key? key}) : super(key: key);
 
   @override
   State<SavedPage> createState() => _SavedPageState();
@@ -52,33 +55,27 @@ class PrimaryBtn extends StatelessWidget {
 class _SavedPageState extends State<SavedPage>{
   @override
   Widget build(BuildContext context) {
-    print("Building SavedPage with ${widget.savedRecipes?.length} recipes.");
+    final recipes = Provider.of<RecipeProvider>(context).recipes;
+    print("Building SavedPage with ${recipes.length} recipes.");
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Saved Recipes'),
+        title: const Text('Saved Recipes'),
       ),
       body: ListView.builder(
-        itemCount: widget.savedRecipes?.length ?? 0, 
+        itemCount: recipes.length, 
         itemBuilder: (context, index) {
-          final recipe = widget.savedRecipes?[index]; 
-          if (recipe != null) {
-            return ListTile(
-              title: Text(recipe.title),
-              subtitle: Text(recipe.description),
-              trailing: IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  if (widget.savedRecipes != null) {
-                    setState(() {
-                      widget.savedRecipes!.removeAt(index);
-                    });
-                  }
-                },
-              ),
-            );
-          } else {
-            return Container(); 
-          }
+          final recipe = recipes[index]; 
+          return ListTile(
+            title: Text(recipe.title),
+            subtitle: Text(recipe.description),
+            trailing: IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () {
+                Provider.of<RecipeProvider>(context, listen: false).removeRecipe(index);
+              },
+            ),
+          );
         },
       ),
     );

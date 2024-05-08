@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import '../Data/homepage_repo.dart';
 import '../Data/recipe_model.dart';
+import '../Data/recipemodel_provider.dart';
+import 'package:provider/provider.dart'; 
+
 
 class RecipePage extends StatefulWidget {
-  final List<Recipe> savedRecipes;
-  final void Function()? onRecipeSaved;
 
   //const RecipePage({Key? key, required this.savedRecipes}) : super(key: key);
-    const RecipePage({Key? key, required this.savedRecipes, this.onRecipeSaved}) : super(key: key);
+  //const RecipePage({Key? key, required this.savedRecipes, this.onRecipeSaved}) : super(key: key);
+  RecipePage({Key? key}) : super(key: key);
 
   @override
   State<RecipePage> createState() => _HomePageState();
@@ -64,10 +66,8 @@ class _HomePageState extends State<RecipePage>{
 
 
   void saveRecipe(Recipe recipe) {
-    setState(() {
-      widget.savedRecipes.add(recipe);
-    });
-    widget.onRecipeSaved?.call();  // Call the callback after updating the list
+    final recipeProvider = Provider.of<RecipeProvider>(context, listen: false);
+    recipeProvider.addRecipe(recipe); 
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text("Recipe saved!"),
       duration: Duration(seconds: 2),
@@ -90,6 +90,7 @@ class _HomePageState extends State<RecipePage>{
 
   @override
   Widget build(BuildContext context) {
+    final recipeProvider = Provider.of<RecipeProvider>(context, listen: false);
     return Scaffold(
       body: SafeArea(
         child: Padding(

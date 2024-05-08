@@ -3,9 +3,6 @@ import 'RecipePage.dart';
 import 'SavedPage.dart';
 import 'ExplorePage.dart';
 import 'ProfilePage.dart';
-import '../Data/recipe_model.dart'; 
-import '../Data/recipemodel_provider.dart'; 
-
 
 class MainPage extends StatefulWidget {
   @override
@@ -14,26 +11,16 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
-  List<Recipe> savedRecipes = []; 
-  late List<Widget> _pages; 
 
   @override
-  void initState() {
-    super.initState();
-    _pages = [
-      RecipePage(
-      savedRecipes: savedRecipes,
-      onRecipeSaved: () => setState(() {}), 
-    ),
-      SavedPage(savedRecipes: savedRecipes),
+  Widget build(BuildContext context) {
+    List<Widget> _pages = [
+      RecipePage(),
+      SavedPage(),
       ExplorePage(),
       ProfilePage(),
     ];
 
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
@@ -48,22 +35,10 @@ class _MainPageState extends State<MainPage> {
           });
         },
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
-            label: 'Recipe',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: 'Saved',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-            label: 'Explore',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: 'Recipe'),
+          BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: 'Saved'),
+          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
     );
