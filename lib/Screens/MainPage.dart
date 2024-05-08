@@ -3,7 +3,9 @@ import 'RecipePage.dart';
 import 'SavedPage.dart';
 import 'ExplorePage.dart';
 import 'ProfilePage.dart';
-import '../Data/recipe_model.dart';  // Ensure this is correctly imported
+import '../Data/recipe_model.dart'; 
+import '../Data/recipemodel_provider.dart'; 
+
 
 class MainPage extends StatefulWidget {
   @override
@@ -12,19 +14,22 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
-  List<Recipe> savedRecipes = [];  // Centralized list of saved recipes
-  late List<Widget> _pages;  // Declare _pages here without initializing
+  List<Recipe> savedRecipes = []; 
+  late List<Widget> _pages; 
 
   @override
   void initState() {
     super.initState();
-    // Initialize _pages here in initState
     _pages = [
-      RecipePage(savedRecipes: savedRecipes),
+      RecipePage(
+      savedRecipes: savedRecipes,
+      onRecipeSaved: () => setState(() {}), 
+    ),
       SavedPage(savedRecipes: savedRecipes),
       ExplorePage(),
       ProfilePage(),
     ];
+
   }
 
   @override

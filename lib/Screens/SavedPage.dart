@@ -52,6 +52,7 @@ class PrimaryBtn extends StatelessWidget {
 class _SavedPageState extends State<SavedPage>{
   @override
   Widget build(BuildContext context) {
+    print("Building SavedPage with ${widget.savedRecipes?.length} recipes.");
     return Scaffold(
       appBar: AppBar(
         title: Text('Saved Recipes'),

@@ -5,8 +5,10 @@ import '../Data/recipe_model.dart';
 
 class RecipePage extends StatefulWidget {
   final List<Recipe> savedRecipes;
+  final void Function()? onRecipeSaved;
 
-  const RecipePage({Key? key, required this.savedRecipes}) : super(key: key);
+  //const RecipePage({Key? key, required this.savedRecipes}) : super(key: key);
+    const RecipePage({Key? key, required this.savedRecipes, this.onRecipeSaved}) : super(key: key);
 
   @override
   State<RecipePage> createState() => _HomePageState();
@@ -58,11 +60,14 @@ class _HomePageState extends State<RecipePage>{
   String response = '';
   String imageUrl = '';
 
+  //print("Saving recipe: ${recipe.imageUrl}");  // Check what's being saved
 
-   void saveRecipe(Recipe recipe) {
+
+  void saveRecipe(Recipe recipe) {
     setState(() {
-      widget.savedRecipes.add(recipe); // Access savedRecipes from the widget
+      widget.savedRecipes.add(recipe);
     });
+    widget.onRecipeSaved?.call();  // Call the callback after updating the list
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text("Recipe saved!"),
       duration: Duration(seconds: 2),
