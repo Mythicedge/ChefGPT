@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'RecipePage.dart';
-import 'ProfilePage.dart';
-import 'ExplorePage.dart';
+import '../Data/recipe_model.dart';
 
 class SavedPage extends StatefulWidget {
-  const SavedPage({Key? key}) : super(key: key);
+  final List<Recipe>? savedRecipes;
+
+  const SavedPage({Key? key, this.savedRecipes}) : super(key: key);
 
   @override
   State<SavedPage> createState() => _SavedPageState();
 }
 
-const double kSpacing = 20.0; // You can adjust this value as needed
+const double kSpacing = 20.0; 
 
 class HeightSpacer extends StatelessWidget {
   final double height;
@@ -49,100 +49,36 @@ class PrimaryBtn extends StatelessWidget {
   }
 }
 
-class _SavedPageState extends State<SavedPage> {
-  late TextEditingController controller;
-  late FocusNode focusNode;
-  final List<String> inputTags = [];
-  String response = '';
-
-  int _selectedIndex = 1; // Set the selected index for SavedPage to 1
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    // You can use a Navigator to navigate to the appropriate page based on the index
-    if (index == 0) {
-      // Navigate to RecipePage
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => RecipePage()),
-      );
-    } else if (index == 1) {
-      // Navigate to SavedPage (only in HomePage)
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => SavedPage()),
-      );
-    } else if (index == 3) {
-      // Navigate to ProfilePage
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => ProfilePage()),
-      );
-    }
-    else if (index == 2) {
-      // Navigate to ExplorePage
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => ExplorePage()),
-      );
-    }
-  }
+class _SavedPageState extends State<SavedPage>{
   @override
-  void initState() {
-    controller = TextEditingController();
-    focusNode = FocusNode();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    focusNode.dispose();
-    super.dispose();
-  }
-
-  @override 
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              children: [
-                // Put in SavedPage code here
-              ],
-            ),
-          ),
-        ),
+      appBar: AppBar(
+        title: Text('Saved Recipes'),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
-            label: 'Recipe',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: 'Saved',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-             label: 'Explore'
-             ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+      body: ListView.builder(
+        itemCount: widget.savedRecipes?.length ?? 0, 
+        itemBuilder: (context, index) {
+          final recipe = widget.savedRecipes?[index]; 
+          if (recipe != null) {
+            return ListTile(
+              title: Text(recipe.title),
+              subtitle: Text(recipe.description),
+              trailing: IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () {
+                  if (widget.savedRecipes != null) {
+                    setState(() {
+                      widget.savedRecipes!.removeAt(index);
+                    });
+                  }
+                },
+              ),
+            );
+          } else {
+            return Container(); 
+          }
+        },
       ),
     );
   }

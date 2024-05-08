@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'RecipePage.dart';
-import 'SavedPage.dart';
-import 'ExplorePage.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -10,7 +7,7 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-const double kSpacing = 20.0; // You can adjust this value as needed
+const double kSpacing = 20.0; 
 
 class HeightSpacer extends StatelessWidget {
   final double height;
@@ -49,49 +46,11 @@ class PrimaryBtn extends StatelessWidget {
   }
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage>{
   late TextEditingController controller;
   late FocusNode focusNode;
   final List<String> inputTags = [];
   String response = '';
-
-  int _selectedIndex = 3; // Set the selected index for ProfilePage to 2
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    switch (index) {
-      case 0:
-        // Navigate to RecipePage
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => RecipePage()),
-        );
-        break;
-      case 1:
-        // Navigate to SavedPage
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => SavedPage()),
-        );
-        break;
-      case 3:
-        // Navigate to ProfilePage
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
-        );
-        break;
-      case 2:
-        // Navigate to ExplorePage
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => ExplorePage()),
-        );
-        break;
-    }
-  }
 
   @override
   void initState() {
@@ -122,31 +81,6 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
-            label: 'Recipe',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: 'Saved',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-             label: 'Explore'
-             ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
       ),
     );
   }

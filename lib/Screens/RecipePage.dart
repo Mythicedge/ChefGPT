@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import '../Data/homepage_repo.dart';
-import 'SavedPage.dart';
-import 'ProfilePage.dart';
-import 'ExplorePage.dart';
+import '../Data/recipe_model.dart';
 
 class RecipePage extends StatefulWidget {
   const RecipePage({Key? key}) : super(key: key);
@@ -51,45 +49,23 @@ class PrimaryBtn extends StatelessWidget {
   }
 }
 
-class _HomePageState extends State<RecipePage> {
+class _HomePageState extends State<RecipePage>{
   late TextEditingController controller;
   late FocusNode focusNode;
   final List<String> inputTags = [];
   String response = '';
   String imageUrl = '';
+  List<Recipe> savedRecipes = [];
 
-  int _selectedIndex = 0;
 
-  void _onItemTapped(int index) {
+   void saveRecipe(Recipe recipe) {
     setState(() {
-      _selectedIndex = index;
+      savedRecipes.add(recipe);
     });
-
-    switch (index) {
-      case 0:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => RecipePage()),
-        );
-        break;
-      case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SavedPage()),
-        );
-        break;
-      case 3:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
-        );
-        break;
-      case 2:
-        Navigator.pushReplacement(context,
-         MaterialPageRoute(builder: (context) => ExplorePage())
-         );
-        break;
-    }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("Recipe saved!"),
+      duration: Duration(seconds: 2),
+    ));
   }
 
   @override
@@ -137,7 +113,6 @@ class _HomePageState extends State<RecipePage> {
                           });
                         }
                       },
-
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -159,24 +134,29 @@ class _HomePageState extends State<RecipePage> {
                     ),
                   ),
                   Container(
-                    color: Theme.of(context).colorScheme.primary,
-                    child: Padding(
-                      padding: const EdgeInsets.all(9),
-                      child: IconButton(
-                        onPressed: () {
+                    height: 63, 
+                    width: 63,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(5.5),
+                        bottomRight: Radius.circular(5.5),
+                      ),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        if (controller.text.isNotEmpty) {
                           setState(() {
-                            if (controller.text.isNotEmpty) {
-                              inputTags.add(controller.text);
-                            }
+                            inputTags.add(controller.text);
                             controller.clear();
                             focusNode.requestFocus();
                           });
-                        },
-                        icon: const Icon(
-                          Icons.add,
-                          color: Colors.white,
-                          size: 30,
-                        ),
+                        }
+                      },
+                      icon: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                        size: 30,
                       ),
                     ),
                   ),
@@ -214,21 +194,41 @@ class _HomePageState extends State<RecipePage> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start, 
                     children: [
-                      if (imageUrl.isNotEmpty)
-                        Image.network(
-                          imageUrl,
-                          fit: BoxFit.contain,
-                          width: 200,
+                      if (response.isNotEmpty && imageUrl.isNotEmpty)
+                        Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.network(imageUrl, width: 200, height: 200, fit: BoxFit.cover),
+                                const SizedBox(width: 10),
+                                IconButton(
+                                  icon: Icon(Icons.bookmark, size: 30),
+                                  onPressed: () => saveRecipe(
+                                    Recipe(
+                                      title: "Generated Recipe", 
+                                      ingredients: inputTags,
+                                      description: response,
+                                      imageUrl: imageUrl,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Text(response, style: TextStyle(fontSize: 16)),
+                            ),
+                          ],
                         ),
-                      Text(
-                        response,
-                        style: TextStyle(fontSize: 20),
-                      ),
                     ],
                   ),
                 ),
               ),
+
               HeightSpacer(height: kSpacing / 2),
               Align(
                 alignment: Alignment.bottomCenter,
@@ -271,31 +271,6 @@ class _HomePageState extends State<RecipePage> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book, size:24),
-            label: 'Recipe',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: 'Saved',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-             label: 'Explore'
-             ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
       ),
     );
   }

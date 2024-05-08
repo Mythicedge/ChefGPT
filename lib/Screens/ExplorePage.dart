@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'RecipePage.dart';
-import 'SavedPage.dart';
-import 'ProfilePage.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({Key? key}) : super(key: key);
@@ -49,45 +46,11 @@ class PrimaryBtn extends StatelessWidget {
   }
 }
 
-class _ExplorePageState extends State<ExplorePage> {
+class _ExplorePageState extends State<ExplorePage>{
   late TextEditingController controller;
   late FocusNode focusNode;
   final List<String> inputTags = [];
   String response = '';
-
-  int _selectedIndex = 2; // Set the selected index for ExplorePage to 3
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    switch (index) {
-      case 0:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => RecipePage()),
-        );
-        break;
-      case 1:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => SavedPage()),
-        );
-        break;
-      case 3:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
-        );
-        break;
-      case 2:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => ExplorePage()),
-        );
-        break;
-    }
-  }
 
   @override
   void initState() {
@@ -113,31 +76,6 @@ class _ExplorePageState extends State<ExplorePage> {
             child: Text("Explore the world of recipes!", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
-            label: 'Recipe',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: 'Saved',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-            label: 'Explore'
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
       ),
     );
   }

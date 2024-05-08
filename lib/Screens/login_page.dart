@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:recipetestapp/Data/recipe_model.dart';
+import 'package:recipetestapp/Screens/MainPage.dart';
 import 'package:recipetestapp/components/my_buttons.dart';
 import 'package:recipetestapp/components/my_textfield.dart';
 import 'package:recipetestapp/components/square_tile.dart';
 import 'RecipePage.dart';
+import 'MainPage.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -41,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
       // When login is successful, navigate to RecipePage
       Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const RecipePage()),
+      MaterialPageRoute(builder: (context) => MainPage()),
       );
 
       // Check if the widget is still mounted before updating the UI
