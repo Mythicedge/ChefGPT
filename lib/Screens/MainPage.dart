@@ -1,9 +1,9 @@
-// MainPage.dart
 import 'package:flutter/material.dart';
 import 'RecipePage.dart';
 import 'SavedPage.dart';
 import 'ExplorePage.dart';
 import 'ProfilePage.dart';
+import '../Data/recipe_model.dart';  // Ensure this is correctly imported
 
 class MainPage extends StatefulWidget {
   @override
@@ -12,17 +12,19 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
-  final List<Widget> _pages = [
-    RecipePage(),
-    SavedPage(),
-    ExplorePage(),
-    ProfilePage(),
-  ];
+  List<Recipe> savedRecipes = [];  // Centralized list of saved recipes
+  late List<Widget> _pages;  // Declare _pages here without initializing
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    // Initialize _pages here in initState
+    _pages = [
+      RecipePage(savedRecipes: savedRecipes),
+      SavedPage(savedRecipes: savedRecipes),
+      ExplorePage(),
+      ProfilePage(),
+    ];
   }
 
   @override
@@ -35,8 +37,11 @@ class _MainPageState extends State<MainPage> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+        onTap: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book),
