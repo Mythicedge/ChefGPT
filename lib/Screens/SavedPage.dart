@@ -63,17 +63,48 @@ class _SavedPageState extends State<SavedPage>{
         title: const Text('Saved Recipes'),
       ),
       body: ListView.builder(
-        itemCount: recipes.length, 
+        itemCount: recipes.length,
         itemBuilder: (context, index) {
-          final recipe = recipes[index]; 
-          return ListTile(
-            title: Text(recipe.title),
-            subtitle: Text(recipe.description),
-            trailing: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                Provider.of<RecipeProvider>(context, listen: false).removeRecipe(index);
-              },
+          final recipe = recipes[index];
+          return Card(
+            child: ExpansionTile(
+              title: Text(recipe.title),
+              leading: Image.network(recipe.imageUrl, width: 50, height: 50, fit: BoxFit.cover),
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(recipe.description, style: TextStyle(fontWeight: FontWeight.bold)),
+                      SizedBox(height: 10),
+                      Text("Ingredients: " + recipe.ingredients.join(', ')),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              // Add any action to edit or revisit recipe generation
+                            },
+                            child: Text('Edit'),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              Provider.of<RecipeProvider>(context, listen: false).removeRecipe(index);
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text("Recipe deleted"),
+                                duration: Duration(seconds: 2),
+                              ));
+                            },
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                )
+              ],
             ),
           );
         },

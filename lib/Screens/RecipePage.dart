@@ -61,6 +61,7 @@ class _HomePageState extends State<RecipePage>{
   final List<String> inputTags = [];
   String response = '';
   String imageUrl = '';
+  bool isLoading = false;
 
   //print("Saving recipe: ${recipe.imageUrl}");  // Check what's being saved
 
@@ -203,6 +204,8 @@ class _HomePageState extends State<RecipePage>{
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start, 
                     children: [
+                      if (isLoading) 
+                        Center(child: CircularProgressIndicator()),
                       if (response.isNotEmpty && imageUrl.isNotEmpty)
                         Column(
                           children: [
@@ -249,7 +252,8 @@ class _HomePageState extends State<RecipePage>{
                     ],
                   ),
                   btnFun: () async {
-              setState(() => response = "Generating recipe...");
+                    isLoading = true;
+
 
               try {
                 var recipeText = await HomePageRepo().askAI(inputTags.join(", "));
@@ -271,7 +275,13 @@ class _HomePageState extends State<RecipePage>{
               } catch (e) {
                 setState(() => response = "Error generating recipe: ${e.toString()}");
               }
-            },
+              finally {
+                      setState(() => isLoading = false);  // Stop showing loading signal
+                    }
+                  }
+
+
+
 
                 ),
               ),
