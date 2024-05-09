@@ -2,36 +2,54 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../Data/recipe_model.dart';
+import 'dart:async';
 
 class RecipeProvider with ChangeNotifier {
   List<Recipe> _recipes = [];
+
   List<Recipe> get recipes => _recipes;
+  
+  StreamSubscription? _recipeSubscription;
+  StreamSubscription? _authListener;
 
-RecipeProvider() {
-    listenToRecipes();
-  }
-
-void listenToRecipes() {
-  String? uid = FirebaseAuth.instance.currentUser?.uid;
-  if (uid != null) {
-    FirebaseFirestore.instance
-      .collection('users').doc(uid).collection('recipes')
-      .snapshots().listen((snapshot) {
-        _recipes = snapshot.docs.map((doc) => Recipe.fromMap({
-          ...doc.data() as Map<String, dynamic>,
-          'id': doc.id,
-        })).toList();
+  RecipeProvider() {
+    _authListener = FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user != null) {
+        print("User is logged in, setting up listener.");
+        listenToRecipes();
+      } else {
+        print("User is logged out, cancelling listener.");
+        _recipeSubscription?.cancel();
+        _recipes.clear();
         notifyListeners();
-      }, onError: (error) {
-        print("Error listening to recipe updates: $error");
-      }).onDone(() {
-        print("Listener has been closed");
-      });
-  } else {
-    print("UID is null, stopping listener");
-    // Perform any cleanup if necessary
+      }
+    });
   }
-}
+
+  void listenToRecipes() {
+    String? uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      _recipeSubscription?.cancel();  // Prevent multiple subscriptions
+      _recipeSubscription = FirebaseFirestore.instance
+        .collection('users').doc(uid).collection('recipes')
+        .snapshots().listen((snapshot) {
+          _recipes = snapshot.docs.map((doc) => Recipe.fromMap({
+            ...doc.data() as Map<String, dynamic>,
+            'id': doc.id,
+          })).toList();
+          notifyListeners();
+        }, onError: (error) {
+          print("Error listening to recipe updates: $error");
+        });
+    }
+  }
+
+  @override
+  void dispose() {
+    _authListener?.cancel();
+    _recipeSubscription?.cancel();
+    super.dispose();
+  }
 
 
   // Fetch recipes from Firestore
@@ -91,10 +109,12 @@ Future<void> addRecipe(Recipe recipe) async {
   // Remove a recipe from Firestore and local list
   Future<void> removeRecipe(String recipeId) async {
   String? uid = FirebaseAuth.instance.currentUser?.uid;
-  if (uid != null) { //&& recipeId.isNotEmpty
+  if (uid != null) {
     await FirebaseFirestore.instance.collection('users').doc(uid).collection('recipes').doc(recipeId).delete();
-    // Firestore deletion is enough since the listener updates the local list
+    _recipes.removeWhere((recipe) => recipe.id == recipeId);
+    notifyListeners();
   }
 }
+
 
 }
