@@ -17,7 +17,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // text editing controllers
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   late bool _loading; // Variable to track loading state
@@ -26,75 +25,6 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     _loading = false; // Initialize loading state to false
-  }
-
-  // sign user in method
-  void signUserIn() async {
-    setState(() {
-      _loading = true; // Set loading state to true
-    });
-
-    try {
-      // Perform sign-in operation
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-
-      // When login is successful, navigate to RecipePage
-      Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => MainPage()),
-      );
-
-      // Check if the widget is still mounted before updating the UI
-    } on FirebaseAuthException catch (e) {
-      // Show error message based on error code
-      _showErrorMessage(e.code);
-    } finally {
-      setState(() {
-        _loading = false; // Set loading state to false
-      });
-    }
-  }
-
-  // Function to show error message in a dialog
-  void _showErrorMessage(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.transparent, // Transparent background
-          content: Container(
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 173, 20, 9),
-              borderRadius: BorderRadius.circular(10), // Rounded border radius
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Text(
-                    message,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context); // Dismiss the dialog
-                  },
-                  child: Text(
-                    'OK',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 
   @override
@@ -107,9 +37,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Logo
                 SquareTile(imagePath: 'lib/images/screenshot qqw.png'),
-                // Welcome message
                 Text(
                   'Welcome to Cooking App!',
                   style: TextStyle(
@@ -132,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                   obscureText: true,
                 ),
                 const SizedBox(height: 10),
-                // Forgot password?
+                 // Forgot password?
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
@@ -162,6 +90,64 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+    );
+  }
+
+  // Sign user in method
+  void signUserIn() async {
+    setState(() {
+      _loading = true; // Set loading state to true
+    });
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage()),
+      );
+    } on FirebaseAuthException catch (e) {
+      _showErrorMessage(e.code); // Now this should work correctly
+    } finally {
+      setState(() {
+        _loading = false; // Set loading state to false
+      });
+    }
+  }
+
+  // Function to show error message in a dialog
+  void _showErrorMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          content: Container(
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 173, 20, 9),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Text(
+                    message,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('OK', style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

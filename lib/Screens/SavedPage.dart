@@ -53,6 +53,17 @@ class PrimaryBtn extends StatelessWidget {
 }
 
 class _SavedPageState extends State<SavedPage>{
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<RecipeProvider>(context, listen: false).fetchRecipes().then((_) {
+      print("Recipes fetched successfully");
+    }).catchError((error) {
+      print("Error fetching recipes: $error");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final recipes = Provider.of<RecipeProvider>(context).recipes;
@@ -92,7 +103,10 @@ class _SavedPageState extends State<SavedPage>{
                           IconButton(
                             icon: Icon(Icons.delete),
                             onPressed: () {
-                              Provider.of<RecipeProvider>(context, listen: false).removeRecipe(index);
+                              // Get the ID of the recipe to delete
+                              String recipeId = recipes[index].id;
+                              // Call removeRecipe with the recipe ID
+                              Provider.of<RecipeProvider>(context, listen: false).removeRecipe(recipeId);
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text("Recipe deleted"),
                                 duration: Duration(seconds: 2),

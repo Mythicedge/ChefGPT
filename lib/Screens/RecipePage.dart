@@ -4,6 +4,8 @@ import '../Data/homepage_repo.dart';
 import '../Data/recipe_model.dart';
 import '../Data/recipemodel_provider.dart';
 import 'package:provider/provider.dart'; 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class RecipePage extends StatefulWidget {
@@ -66,8 +68,18 @@ class _HomePageState extends State<RecipePage>{
   //print("Saving recipe: ${recipe.imageUrl}");  // Check what's being saved
 
 
-  void saveRecipe(String fullRecipeText, String imageUrl) {
-  final recipeProvider = Provider.of<RecipeProvider>(context, listen: false);
+void saveRecipe(String fullRecipeText, String imageUrl) async {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final User? user = auth.currentUser;
+  final uid = user?.uid;
+
+  if (uid == null) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("No user logged in"),
+      duration: Duration(seconds: 2),
+    ));
+    return;
+  }
 
   // Extract the title up to "Ingredients"
   int ingredientsIndex = fullRecipeText.indexOf("Ingredients:");
@@ -75,21 +87,29 @@ class _HomePageState extends State<RecipePage>{
       ? fullRecipeText.substring(0, ingredientsIndex).trim()
       : "Generated Recipe";
 
-  // Create and save the new recipe
-  Recipe newRecipe = Recipe(
-    title: title,
-    ingredients: inputTags, // Assuming you handle ingredients list separately
-    description: fullRecipeText,
-    imageUrl: imageUrl,
-  );
+  // Create and save the new recipe to Firestore
+  final recipe = {
+    'title': title,
+    'ingredients': inputTags,  // Assuming you handle ingredients list separately
+    'description': fullRecipeText,
+    'imageUrl': imageUrl,
+  };
 
-  recipeProvider.addRecipe(newRecipe);
-
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    content: Text("Recipe saved!"),
-    duration: Duration(seconds: 2),
-  ));
+  FirebaseFirestore.instance
+    .collection('users')
+    .doc(uid)
+    .collection('recipes')
+    .add(recipe)
+    .then((value) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("Recipe saved!"),
+      duration: Duration(seconds: 2),
+    )))
+    .catchError((error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("Failed to save recipe: $error"),
+      duration: Duration(seconds: 2),
+    )));
 }
+
 
 
   @override

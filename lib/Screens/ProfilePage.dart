@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -76,7 +78,13 @@ class _ProfilePageState extends State<ProfilePage>{
             height: MediaQuery.of(context).size.height,
             child: Column(
               children: [
-                // Your ProfilePage content here
+                ElevatedButton(
+                onPressed: _logout,
+                child: Text('Logout'),
+                style: ElevatedButton.styleFrom(
+                  
+                ),
+                ),
               ],
             ),
           ),
@@ -84,4 +92,11 @@ class _ProfilePageState extends State<ProfilePage>{
       ),
     );
   }
+
+  void _logout() async {
+    await FirebaseAuth.instance.signOut();
+    if (!mounted) return;
+    Navigator.of(context).pushReplacementNamed('/login');  // Adjust the route as necessary
+  }
+
 }
