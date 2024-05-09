@@ -9,6 +9,9 @@ When that finishes installing, it will tell you to install the flutter sdk in th
 On the bottom right of your vss, click on where you could select devices, and select an android device. Once that emulator starts up, press F5 in vss, and it will finally start this flutter project. First runtime will take a few minutes. You may need to run the command "dart pub get" in the terminal.
 
 flutter clean
+
 flutter pub get
+
 flutter run
+
 Then press F5 to start debugging
