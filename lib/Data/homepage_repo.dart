@@ -35,7 +35,6 @@ class HomePageRepo extends HomePageRepository {
   }
   
   Future<dynamic> generateImage(String fullDescription) async {
-  // Extract the title and the ingredients section from the full description
   String description = fullDescription;
   int endIndex = fullDescription.indexOf("\n\nAllergy Warnings:");
   if (endIndex > 0) {
@@ -63,13 +62,18 @@ class HomePageRepo extends HomePageRepository {
       var imageUrl = jsonData['data'][0]['url'];
       return imageUrl;
     } else {
+      var errorData = jsonDecode(response.body);
+      if (errorData['error']['code'] == "content_policy_violation") {
+        return "Error: Content policy violation. Please try different ingredients.";
+      }
       return "API call failed with status: ${response.statusCode}";
     }
   } catch (e) {
     print("Error in generating image: $e");
-    return e.toString();
+    return "Error in generating image: $e";
   }
 }
+
 
 
 

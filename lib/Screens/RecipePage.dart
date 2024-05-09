@@ -66,14 +66,31 @@ class _HomePageState extends State<RecipePage>{
   //print("Saving recipe: ${recipe.imageUrl}");  // Check what's being saved
 
 
-  void saveRecipe(Recipe recipe) {
-    final recipeProvider = Provider.of<RecipeProvider>(context, listen: false);
-    recipeProvider.addRecipe(recipe); 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text("Recipe saved!"),
-      duration: Duration(seconds: 2),
-    ));
-  }
+  void saveRecipe(String fullRecipeText, String imageUrl) {
+  final recipeProvider = Provider.of<RecipeProvider>(context, listen: false);
+
+  // Extract the title up to "Ingredients"
+  int ingredientsIndex = fullRecipeText.indexOf("Ingredients:");
+  String title = ingredientsIndex != -1
+      ? fullRecipeText.substring(0, ingredientsIndex).trim()
+      : "Generated Recipe";
+
+  // Create and save the new recipe
+  Recipe newRecipe = Recipe(
+    title: title,
+    ingredients: inputTags, // Assuming you handle ingredients list separately
+    description: fullRecipeText,
+    imageUrl: imageUrl,
+  );
+
+  recipeProvider.addRecipe(newRecipe);
+
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    content: Text("Recipe saved!"),
+    duration: Duration(seconds: 2),
+  ));
+}
+
 
   @override
   void initState() {
@@ -216,14 +233,7 @@ class _HomePageState extends State<RecipePage>{
                                 const SizedBox(width: 10),
                                 IconButton(
                                   icon: Icon(Icons.bookmark, size: 30),
-                                  onPressed: () => saveRecipe(
-                                    Recipe(
-                                      title: "Generated Recipe", 
-                                      ingredients: inputTags,
-                                      description: response,
-                                      imageUrl: imageUrl,
-                                    ),
-                                  ),
+                                  onPressed: () => saveRecipe(response, imageUrl),
                                 ),
                               ],
                             ),
@@ -252,35 +262,34 @@ class _HomePageState extends State<RecipePage>{
                     ],
                   ),
                   btnFun: () async {
-                    isLoading = true;
+                    setState(() => isLoading = true);
 
+                    try {
+                      var recipeText = await HomePageRepo().askAI(inputTags.join(", "));
+                      if (recipeText != null && recipeText.isNotEmpty) {
+                        setState(() => response = recipeText);
 
-              try {
-                var recipeText = await HomePageRepo().askAI(inputTags.join(", "));
-                if (recipeText != null && recipeText.isNotEmpty) {
-                  setState(() => response = recipeText);
-
-                  var imageUrl = await HomePageRepo().generateImage(recipeText);
-                  if (imageUrl is String && imageUrl.startsWith("http")) {
-                    setState(() {
-                      this.imageUrl = imageUrl; // Assign URL to imageUrl
-                      response = recipeText; // Display recipe text
-                    });
-                  } else {
-                    setState(() => response = "Failed to process image: $imageUrl");
-                  }
-                } else {
-                  setState(() => response = "Failed to generate recipe.");
-                }
-              } catch (e) {
-                setState(() => response = "Error generating recipe: ${e.toString()}");
-              }
-              finally {
+                        var imageUrl = await HomePageRepo().generateImage(recipeText);
+                        if (!imageUrl.startsWith("Error:")) {
+                          setState(() {
+                            this.imageUrl = imageUrl; // Assign URL to imageUrl
+                          });
+                        } else {
+                          // Display error message to user
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(imageUrl),
+                            duration: Duration(seconds: 5),
+                          ));
+                        }
+                      } else {
+                        setState(() => response = "Failed to generate recipe.");
+                      }
+                    } catch (e) {
+                      setState(() => response = "Error generating recipe: ${e.toString()}");
+                    } finally {
                       setState(() => isLoading = false);  // Stop showing loading signal
                     }
                   }
-
-
 
 
                 ),
