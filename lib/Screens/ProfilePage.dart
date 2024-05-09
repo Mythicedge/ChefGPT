@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../components/my_buttons.dart';
 
 
 class ProfilePage extends StatefulWidget {
@@ -72,19 +73,18 @@ class _ProfilePageState extends State<ProfilePage>{
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
+        child: Center( // Center the content vertically and horizontally
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25), // Ensure padding is similar to the login button
             child: Column(
+              mainAxisSize: MainAxisSize.min, // Use minimum space needed by children
               children: [
-                ElevatedButton(
-                onPressed: _logout,
-                child: Text('Logout'),
-                style: ElevatedButton.styleFrom(
-                  
+                const SizedBox(height: 25),
+                MyButton(
+                  text: 'Logout',
+                  onTap: _logout,
                 ),
-                ),
+                const SizedBox(height: 50),
               ],
             ),
           ),
