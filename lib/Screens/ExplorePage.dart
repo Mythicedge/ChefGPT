@@ -24,7 +24,7 @@ class _ExplorePageState extends State<ExplorePage> {
     try {
       const apiKey = '7ea5aa4a8c404f179e74a9d0f0dc0896';
       final response = await http.get(Uri.parse(
-          'https://api.spoonacular.com/recipes/random?number=35&apiKey=$apiKey'));
+          'https://api.spoonacular.com/recipes/random?number=8&apiKey=$apiKey'));
       if (response.statusCode == 200) {
         final List<Map<String, dynamic>> recipes =
             (jsonDecode(response.body)['recipes'] as List)

@@ -1,12 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:recipetestapp/Data/recipe_model.dart';
 import 'package:recipetestapp/Screens/MainPage.dart';
 import 'package:recipetestapp/components/my_buttons.dart';
 import 'package:recipetestapp/components/my_textfield.dart';
 import 'package:recipetestapp/components/square_tile.dart';
-import 'RecipePage.dart';
-import 'MainPage.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -39,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 SquareTile(imagePath: 'lib/images/screenshot qqw.png'),
                 Text(
-                  'Welcome to Cooking App!',
+                  'Welcome to RecipeGPT!',
                   style: TextStyle(
                     color: Colors.grey[700],
                     fontSize: 16,
