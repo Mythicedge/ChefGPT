@@ -242,13 +242,14 @@ void saveRecipe(String fullRecipeText, String imageUrl) async {
                     children: [
                       if (isLoading) 
                         Center(child: CircularProgressIndicator()),
-                      if (response.isNotEmpty && imageUrl.isNotEmpty)
+                      if (response.isNotEmpty)
                         Column(
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image.network(imageUrl, width: 200, height: 200, fit: BoxFit.cover),
+                                if (imageUrl.isNotEmpty)
+                                  Image.network(imageUrl, width: 200, height: 200, fit: BoxFit.cover),
                                 const SizedBox(width: 10),
                                 IconButton(
                                   icon: Icon(Icons.bookmark, size: 30),
@@ -256,7 +257,6 @@ void saveRecipe(String fullRecipeText, String imageUrl) async {
                                 ),
                               ],
                             ),
-                            
                             Padding(
                               padding: const EdgeInsets.only(top: 10),
                               child: Text(response, style: TextStyle(fontSize: 16)),
@@ -267,6 +267,8 @@ void saveRecipe(String fullRecipeText, String imageUrl) async {
                   ),
                 ),
               ),
+
+
 
               HeightSpacer(height: kSpacing / 2),
               Align(
@@ -286,27 +288,41 @@ void saveRecipe(String fullRecipeText, String imageUrl) async {
                     try {
                       var recipeText = await HomePageRepo().askAI(inputTags.join(", "));
                       if (recipeText != null && recipeText.isNotEmpty) {
-                        setState(() => response = recipeText);
+                        setState(() {
+                          response = recipeText; // Always update the response with the recipe text
+                        });
 
-                        var imageUrl = await HomePageRepo().generateImage(recipeText);
-                        if (!imageUrl.startsWith("Error:")) {
-                          setState(() {
-                            this.imageUrl = imageUrl; // Assign URL to imageUrl
-                          });
+                        var imageResult = await HomePageRepo().generateImage(recipeText);
+                        if (!imageResult.startsWith("Error:")) {
+                          setState(() => imageUrl = imageResult); // Only update the image URL if no error
                         } else {
-                          // Display error message to user
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(imageUrl),
-                            duration: Duration(seconds: 5),
-                          ));
+                          setState(() {
+                            imageUrl = ''; // Ensure imageUrl is empty to prevent showing old or invalid images
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(imageResult),  // Display the error message from image generation
+                              duration: Duration(seconds: 5),
+                            ));
+                          });
                         }
                       } else {
-                        setState(() => response = "Failed to generate recipe.");
+                        setState(() {
+                          response = "Failed to generate recipe.";
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Failed to generate recipe text."),
+                            duration: Duration(seconds: 5),
+                          ));
+                        });
                       }
                     } catch (e) {
-                      setState(() => response = "Error generating recipe: ${e.toString()}");
+                      setState(() {
+                        response = "Error generating recipe: ${e.toString()}";
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Error generating recipe: ${e.toString()}"),
+                          duration: Duration(seconds: 5),
+                        ));
+                      });
                     } finally {
-                      setState(() => isLoading = false);  // Stop showing loading signal
+                      setState(() => isLoading = false); // Stop showing loading signal
                     }
                   }
 

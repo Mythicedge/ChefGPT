@@ -64,7 +64,7 @@ class HomePageRepo extends HomePageRepository {
     } else {
       var errorData = jsonDecode(response.body);
       if (errorData['error']['code'] == "content_policy_violation") {
-        return "Error: Content policy violation. Please try different ingredients.";
+        return "Error: Image Generator failed due to Content policy violation. Please try different ingredients for a generated image.";
       }
       return "API call failed with status: ${response.statusCode}";
     }

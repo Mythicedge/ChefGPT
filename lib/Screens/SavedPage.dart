@@ -51,17 +51,7 @@ class PrimaryBtn extends StatelessWidget {
   }
 }
 
-class _SavedPageState extends State<SavedPage>{
-
-  @override
-  void initState() {
-    super.initState();
-    Provider.of<RecipeProvider>(context, listen: false).fetchRecipes().then((_) {
-      print("Recipes fetched successfully");
-    }).catchError((error) {
-      print("Error fetching recipes: $error");
-    });
-  }
+class _SavedPageState extends State<SavedPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +69,21 @@ class _SavedPageState extends State<SavedPage>{
           return Card(
             child: ExpansionTile(
               title: Text(recipe.title),
-              leading: Image.network(recipe.imageUrl, width: 50, height: 50, fit: BoxFit.cover),
+              leading: Image.network(
+                recipe.imageUrl,
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                 // a
+                  return Image.asset(
+                    'lib/images/blank.png',  // Make sure the path is correct
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -93,12 +97,7 @@ class _SavedPageState extends State<SavedPage>{
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              // Add any action to edit or revisit recipe generation
-                            },
-                            child: Text('Edit'),
-                          ),
+                          
                           IconButton(
                             icon: Icon(Icons.delete),
                             onPressed: () {
@@ -125,3 +124,5 @@ class _SavedPageState extends State<SavedPage>{
     );
   }
 }
+
+
