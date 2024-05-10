@@ -50,9 +50,9 @@ class _ExplorePageState extends State<ExplorePage> {
     try {
       const apiKey = '7ea5aa4a8c404f179e74a9d0f0dc0896';
       final response = await http.get(Uri.parse(
-          'https://api.spoonacular.com/recipes/$recipeId/information?apiKey=$apiKey'));
+          'https://api.spoonacular.com/recipes/$recipeId/information?includeNutrition=false&apiKey=$apiKey'));
       if (response.statusCode == 200) {
-        return jsonDecode(response.body) as Map<String, dynamic>;
+        return jsonDecode(response.body);
       } else {
         throw Exception(
             'Failed to fetch recipe details: ${response.statusCode}');
@@ -212,93 +212,55 @@ class RecipeDetailPage extends StatelessWidget {
     return instructionList;
   }
 
-  List<String> _getWarnings() {
-    // Retrieve allergy warnings from recipe data
-    List<dynamic>? allergies = recipe['allergens'];
-    if (allergies != null) {
-      if (allergies is List<dynamic>) {
-        return allergies
-            .map((allergy) => allergy['name'].toString())
-            .toList()
-            .cast<String>();
-      } else {
-        // Return empty list if allergy data is not in expected format
-        return [];
-      }
-    } else {
-      // Return empty list if allergy data is missing
-      return [];
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final List<dynamic> ingredients = recipe['extendedIngredients'];
     final String instructions = recipe['instructions'] ?? '';
-    final List<String> warnings = _getWarnings();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(recipe['title']),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          const Text(
-            'Ingredients',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: ingredients.map((ingredient) {
-              return Text(
-                '- ${ingredient['original']}',
-                style: const TextStyle(fontSize: 16),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Instructions',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: _parseInstructions(instructions).map((instruction) {
-              return Text(
-                instruction.trim(),
-                style: const TextStyle(fontSize: 16),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Allergy Warnings',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: warnings.map((warning) {
-              return Text(
-                '- $warning',
-                style: const TextStyle(fontSize: 16),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
+        appBar: AppBar(
+            title: Text(recipe['title']),
+        ),
+        body: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+                const Text(
+                    'Ingredients',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                    ),
+                ),
+                const SizedBox(height: 8),
+                Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: ingredients.map((ingredient) {
+                        return Text(
+                            '- ${ingredient['original']}',
+                            style: const TextStyle(fontSize: 16),
+                        );
+                    }).toList(),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                    'Instructions',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                    ),
+                ),
+                const SizedBox(height: 8),
+                Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: _parseInstructions(instructions).map((instruction) {
+                        return Text(
+                            instruction.trim(),
+                            style: const TextStyle(fontSize: 16),
+                        );
+                    }).toList(),
+                ),
+            ],
+        ),
     );
   }
 }
