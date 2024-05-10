@@ -170,7 +170,7 @@ void saveRecipe(String fullRecipeText, String imageUrl) async {
                         enabledBorder: const OutlineInputBorder(
                           borderSide: BorderSide(),
                         ),
-                        labelText: "Enter the ingredients you have...",
+                        labelText: "Enter ingredients or dish name!",
                         labelStyle: TextStyle(
                           color: Theme.of(context).colorScheme.primary,
                         ),
