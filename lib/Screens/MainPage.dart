@@ -4,7 +4,7 @@ import 'SavedPage.dart';
 import 'ExplorePage.dart';
 import 'ProfilePage.dart';
 
-class MainPage extends StatefulWidget {
+class MainPage extends StatefulWidget { // Class used to show bottom navigation bar in every page, removes the need to add this for every page
   @override
   _MainPageState createState() => _MainPageState();
 }

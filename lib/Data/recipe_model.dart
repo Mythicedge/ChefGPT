@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class Recipe {
+class Recipe { // Class used for handling output given by OpenAI text recipe generation
   final String id; 
   final String title;
   final List<String> ingredients;

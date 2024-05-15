@@ -14,7 +14,7 @@ class SavedPage extends StatefulWidget {
 
 const double kSpacing = 20.0; 
 
-class HeightSpacer extends StatelessWidget {
+class HeightSpacer extends StatelessWidget { //Used to help with Styling
   final double height;
 
   const HeightSpacer({Key? key, required this.height}) : super(key: key);
@@ -55,7 +55,7 @@ class _SavedPageState extends State<SavedPage> {
 
   @override
   Widget build(BuildContext context) {
-    final recipes = Provider.of<RecipeProvider>(context).recipes;
+    final recipes = Provider.of<RecipeProvider>(context).recipes; // Provider is used to automatically update the Page in real time 
     print("Building SavedPage with ${recipes.length} recipes.");
 
     return Scaffold(
@@ -67,7 +67,7 @@ class _SavedPageState extends State<SavedPage> {
         itemBuilder: (context, index) {
           final recipe = recipes[index];
           return Card(
-            child: ExpansionTile(
+            child: ExpansionTile( // ExpansionTile used to display each Saved Recipes. Upon pressing one of these recipe banners, it will expand
               title: Text(recipe.title),
               leading: Image.network(
                 recipe.imageUrl,
@@ -77,7 +77,7 @@ class _SavedPageState extends State<SavedPage> {
                 errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                  // a
                   return Image.asset(
-                    'lib/images/blank.png',  // Make sure the path is correct
+                    'lib/images/blank.png',  // Placeholder Image, Avoid Image Exception Errors
                     width: 50,
                     height: 50,
                     fit: BoxFit.cover,
@@ -98,12 +98,10 @@ class _SavedPageState extends State<SavedPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           
-                          IconButton(
-                            icon: Icon(Icons.delete),
+                          IconButton( // Delete Saved Recipes Button
+                            icon: Icon(Icons.delete), 
                             onPressed: () {
-                              // Get the ID of the recipe to delete
                               String recipeId = recipes[index].id;
-                              // Call removeRecipe with the recipe ID
                               Provider.of<RecipeProvider>(context, listen: false).removeRecipe(recipeId);
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text("Recipe deleted"),

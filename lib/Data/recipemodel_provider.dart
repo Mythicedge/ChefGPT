@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../Data/recipe_model.dart';
 import 'dart:async';
 
-class RecipeProvider with ChangeNotifier {
+class RecipeProvider with ChangeNotifier { // Class used to help update UI in real time and class used for the Firestore backend
   List<Recipe> _recipes = [];
 
   List<Recipe> get recipes => _recipes;
@@ -52,8 +52,8 @@ class RecipeProvider with ChangeNotifier {
   }
 
 
-  // Fetch recipes from Firestore
-  Future<void> fetchRecipes() async {
+  
+  Future<void> fetchRecipes() async { // Fetch recipes from Firestore
   String? uid = FirebaseAuth.instance.currentUser?.uid;
   if (uid == null) {
     print("No UID found");
@@ -64,7 +64,7 @@ class RecipeProvider with ChangeNotifier {
     var snapshot = await collection.get();
     _recipes = snapshot.docs.map((doc) {
       var data = doc.data() as Map<String, dynamic>;
-      data['id'] = doc.id; // Add the document ID to the data map
+      data['id'] = doc.id; 
       return Recipe.fromMap(data);
     }).toList();
     print("Fetched ${_recipes.length} recipes with IDs");
@@ -76,8 +76,8 @@ class RecipeProvider with ChangeNotifier {
 
 
 
-  // Add a recipe to Firestore and local list
-Future<void> addRecipe(Recipe recipe) async {
+ 
+Future<void> addRecipe(Recipe recipe) async {  // Add a recipe to Firestore and local list
   String? uid = FirebaseAuth.instance.currentUser?.uid;
   if (uid == null) {
     print("User ID is not available.");
@@ -85,10 +85,10 @@ Future<void> addRecipe(Recipe recipe) async {
   }
   try {
     var collection = FirebaseFirestore.instance.collection('users').doc(uid).collection('recipes');
-    var docRef = await collection.add(recipe.toMap()); // Firestore creates an ID
+    var docRef = await collection.add(recipe.toMap()); 
   
-    // Create a new Recipe with the new ID
-    Recipe newRecipe = Recipe(
+   
+    Recipe newRecipe = Recipe(  // Create new recipes for Firestore
       id: docRef.id,
       title: recipe.title,
       ingredients: recipe.ingredients,
@@ -106,7 +106,7 @@ Future<void> addRecipe(Recipe recipe) async {
 
 
 
-  // Remove a recipe from Firestore and local list
+  // Remove recipe from Firestore and local list
   Future<void> removeRecipe(String recipeId) async {
   String? uid = FirebaseAuth.instance.currentUser?.uid;
   if (uid != null) {

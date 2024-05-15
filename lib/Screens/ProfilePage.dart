@@ -73,11 +73,11 @@ class _ProfilePageState extends State<ProfilePage>{
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Center( // Center the content vertically and horizontally
+        child: Center( 
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25), // Ensure padding is similar to the login button
+            padding: const EdgeInsets.symmetric(horizontal: 25), 
             child: Column(
-              mainAxisSize: MainAxisSize.min, // Use minimum space needed by children
+              mainAxisSize: MainAxisSize.min, 
               children: [
                 const SizedBox(height: 25),
                 MyButton(

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class ImageResponseModel {
+class ImageResponseModel { // Handling output given by the OpenAI API for Image Generation
   final String url;
 
   ImageResponseModel({required this.url});

@@ -7,7 +7,7 @@ abstract class HomePageRepository {
   Future<dynamic> askAI(String prompt);
 }
 
-class HomePageRepo extends HomePageRepository {
+class HomePageRepo extends HomePageRepository { // Text Generation OpenAI API Implementation, GPT 3.5 Turbo
   @override
   Future<dynamic> askAI(String prompt) async {
     try {
@@ -34,7 +34,7 @@ class HomePageRepo extends HomePageRepository {
     }
   }
   
-  Future<dynamic> generateImage(String fullDescription) async {
+  Future<dynamic> generateImage(String fullDescription) async { // Image Generation OpenAI API Implementation, Dall-E-2
   String description = fullDescription;
   int endIndex = fullDescription.indexOf("\n\nAllergy Warnings:");
   if (endIndex > 0) {
@@ -50,7 +50,7 @@ class HomePageRepo extends HomePageRepository {
       },
       body: jsonEncode({
         "model": "dall-e-2",
-        "prompt": description,  // Use the newly formatted description here
+        "prompt": description, 
         "n": 1,
         "size": "1024x1024"
       }),

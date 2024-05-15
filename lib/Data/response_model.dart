@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
-class ResponseModel {
+class ResponseModel { // Class used for handling output given by OpenAI text recipe generation
   final String id;
   final String object;
   final String model;

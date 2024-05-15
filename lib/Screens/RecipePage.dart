@@ -19,7 +19,7 @@ class RecipePage extends StatefulWidget {
 
 const double kSpacing = 20.0;
 
-class HeightSpacer extends StatelessWidget {
+class HeightSpacer extends StatelessWidget { // Class for styling
   final double height;
 
   const HeightSpacer({Key? key, required this.height}) : super(key: key);
@@ -30,7 +30,7 @@ class HeightSpacer extends StatelessWidget {
   }
 }
 
-class WidthSpacer extends StatelessWidget {
+class WidthSpacer extends StatelessWidget { // Class for styling
   final double width;
 
   const WidthSpacer({Key? key, required this.width}) : super(key: key);
@@ -67,7 +67,7 @@ class _HomePageState extends State<RecipePage>{
   //print("Saving recipe: ${recipe.imageUrl}");  // Check what's being saved
 
 
-void saveRecipe(String fullRecipeText, String imageUrl) async {
+void saveRecipe(String fullRecipeText, String imageUrl) async { // Function used for saving recipes
   final FirebaseAuth auth = FirebaseAuth.instance;
   final User? user = auth.currentUser;
   final uid = user?.uid;
@@ -80,21 +80,21 @@ void saveRecipe(String fullRecipeText, String imageUrl) async {
     return;
   }
 
-  // Extract the title up to "Ingredients"
-  int ingredientsIndex = fullRecipeText.indexOf("Ingredients:");
+  
+  int ingredientsIndex = fullRecipeText.indexOf("Ingredients:"); // Extract the title up to "Ingredients"
   String title = ingredientsIndex != -1
       ? fullRecipeText.substring(0, ingredientsIndex).trim()
       : "Generated Recipe";
 
-  // Create and save the new recipe to Firestore
+
   final recipe = {
     'title': title,
-    'ingredients': inputTags,  // Assuming you handle ingredients list separately
+    'ingredients': inputTags,  
     'description': fullRecipeText,
     'imageUrl': imageUrl,
   };
 
-  FirebaseFirestore.instance
+  FirebaseFirestore.instance // Firestore stores saved recipes
     .collection('users')
     .doc(uid)
     .collection('recipes')
@@ -143,7 +143,7 @@ void saveRecipe(String fullRecipeText, String imageUrl) async {
               Row(
                 children: [
                   Flexible(
-                    child: TextFormField(
+                    child: TextFormField( // Textbox where users input ingredients or dish name
                       autofocus: true,
                       autocorrect: true,
                       focusNode: focusNode,
@@ -206,7 +206,7 @@ void saveRecipe(String fullRecipeText, String imageUrl) async {
                   ),
                 ],
               ),
-              Padding(
+              Padding( // Small Individual boxes shown for each ingredient
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Wrap(
                   children: [
@@ -215,7 +215,7 @@ void saveRecipe(String fullRecipeText, String imageUrl) async {
                         padding: const EdgeInsets.symmetric(horizontal: 5.0),
                         child: Chip(
                           backgroundColor: Color(
-                            (math.Random().nextDouble() * 0xFFFFFF).toInt(),
+                            (math.Random().nextDouble() * 0xFFFFFF).toInt(), 
                           ).withOpacity(0.1),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.5),
@@ -235,7 +235,7 @@ void saveRecipe(String fullRecipeText, String imageUrl) async {
                   ],
                 ),
               ),
-              Expanded(
+              Expanded( // Output section for image and full recipe details
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start, 
@@ -282,24 +282,24 @@ void saveRecipe(String fullRecipeText, String imageUrl) async {
                       const Text('Create Recipe'),
                     ],
                   ),
-                  btnFun: () async {
+                  btnFun: () async { // Create Recipe Button functionality
                     setState(() => isLoading = true);
 
                     try {
                       var recipeText = await HomePageRepo().askAI(inputTags.join(", "));
                       if (recipeText != null && recipeText.isNotEmpty) {
                         setState(() {
-                          response = recipeText; // Always update the response with the recipe text
+                          response = recipeText; 
                         });
 
                         var imageResult = await HomePageRepo().generateImage(recipeText);
                         if (!imageResult.startsWith("Error:")) {
-                          setState(() => imageUrl = imageResult); // Only update the image URL if no error
+                          setState(() => imageUrl = imageResult); 
                         } else {
                           setState(() {
-                            imageUrl = ''; // Ensure imageUrl is empty to prevent showing old or invalid images
+                            imageUrl = ''; 
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(imageResult),  // Display the error message from image generation
+                              content: Text(imageResult),  
                               duration: Duration(seconds: 5),
                             ));
                           });
